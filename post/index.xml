@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on </title>
+    <link>/post/</link>
+    <description>Recent content in Posts on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 10 Mar 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Initial Commit</title>
+      <link>/post/2019/03/10/initial-commit/</link>
+      <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/03/10/initial-commit/</guid>
+      <description>So, I want to Welcome everybody who at any circumstances get to this page.
+Recently I decided that it will be great at least to save some random things that I found interesting but also try to share it cause I strongly believe that if something become interesting to one person then this person is not alone and there is non zero probability that there is somebody else who can be interested in it.</description>
+    </item>
+    
+  </channel>
+</rss>
