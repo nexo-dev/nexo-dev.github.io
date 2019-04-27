@@ -6,10 +6,19 @@
     <description>Recent content in Blog on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 10 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 27 Apr 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How to open programmatically using Swift</title>
+      <link>/post/2019/04/27/how-to-open-programmatically-using-swift/</link>
+      <pubDate>Sat, 27 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/04/27/how-to-open-programmatically-using-swift/</guid>
+      <description>Once I face a problem - &amp;ldquo;How can I create a normal window on Mac OS?&amp;rdquo;. Definitely it is possible to use XCode, generate new project using very modern tools and start writing events handling functions/callbacks/delegates/etc. But what if I want to do everything using code, for example last available version of Swift. And here I faced a problem cause there are no normal step-by-step guides which will explain how to do it.</description>
+    </item>
     
     <item>
       <title>Initial Commit</title>
