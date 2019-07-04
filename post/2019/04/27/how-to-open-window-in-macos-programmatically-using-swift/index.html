@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to open window in MacOS programmatically using Swift | </title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/theme-override.css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.css" integrity="sha384-D+9gmBxUQogRLqvARvNLmA9hS2x//eK1FhVb9PiU86gmcrBrJAQT8okdJ4LMp2uv" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.js" integrity="sha384-483A6DwYfKeDa0Q52fJmxFXkcPCFfnXMoXblOkJ4JcA8zATN6Tm78UNL72AKk+0O" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/contrib/auto-render.min.js" integrity="sha384-yACMu8JWxKzSp/C1YV86pzGiQ/l1YUfE8oPuahJQxzehAjEt2GiQuy/BIvl9KyeF" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body);
+        });
+    </script>
+
+<header>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">/home/</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">~/categories</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">How to open window in MacOS programmatically using Swift</span></h1>
+
+<h2 class="date">2019/04/27</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/blog">Blog</a> 
+  
+  
+  
+  Tags: <a href="/tags/swift">swift</a> 
+  
+  
+</p>
+</div>
+
+
+
+<main>
+<p>Once I face a problem - &ldquo;How can I create a normal window on Mac OS?&rdquo;. Definitely it is possible to use XCode, generate new project using very modern tools and start writing events handling functions/callbacks/delegates/etc. But what if I want to do everything using code, for example last available version of Swift. And here I faced a problem cause there are no normal step-by-step guides which will explain how to do it. There are some information on Stack Overflow or on other sites but nothing really complete.</p>
+
+<p>So, having a lot of knowledge from past how to do the same as I want on Windows using WinAPI, I started to dig into <a href="https://developer.apple.com/documentation/">documentation</a> and based on own mistakes start writing some code.</p>
+
+<p>Here is first version of code:</p>
+
+<pre><code>import AppKit
+
+class AppDelegate: NSObject, NSApplicationDelegate {
+    var window: NSWindow!
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NSLog(&quot;Start app&quot;)
+
+        window = NSWindow(contentRect: NSMakeRect(0, 0, 1024, 768),
+            styleMask: [.closable, .titled],
+            backing: .buffered,
+            defer: false)
+
+        window.title = &quot;Hey, new Window!&quot;
+        window.center()
+        window.orderFrontRegardless()      
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        NSLog(&quot;Terminate app&quot;)
+    }
+
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -&gt; Bool {
+        return true
+    }
+}
+
+let app = NSApplication.shared
+let appDelegate = AppDelegate()
+app.delegate = appDelegate
+
+app.run()
+</code></pre>
+
+<p>Basically we define <code>AppDelegate</code> which implements several methods which define behavior that we need from application. <code>applicationDidFinishLaunching</code> is called when application finished launch and simplified it is our <code>WinMain</code>. <code>applicationWillTerminate</code> - added only to be able to log fact when application is got closed. <code>applicationShouldTerminateAfterLastWindowClosed</code> - additional configuration for application which result in automatic close of application (it means that event loop will be stopped) when last <code>Window</code> object is closed, in our cases we have only one window, so when it will be closed at the same time whole application will be terminated.</p>
+
+<p>This approach works and it seems like ideal solution for what we need, but the answer is - no. What is really needed is to be able to control event loop which is hidden here in <code>run</code> function of the application. Here we want to have full control for the events and be able to do something between events handling.</p>
+
+<p>So here comes second version -</p>
+
+<pre><code>import AppKit
+
+var running = true
+
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NSLog(&quot;start app&quot;)
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        NSLog(&quot;applicationWillTerminate&quot;)
+        running = false
+    }
+}
+
+class WindowDelegate: NSObject, NSWindowDelegate {
+    func windowDidResize(_ notification: Notification) {
+        NSLog(&quot;windowDidResize&quot;)
+    }
+
+    func windowWillClose(_ notification: Notification) {
+        NSLog(&quot;windowWillClose&quot;)
+        running = false
+    }
+}
+
+let app = NSApplication.shared
+let appDelegate = AppDelegate()
+app.delegate = appDelegate
+app.setActivationPolicy(.regular)
+app.finishLaunching()
+
+let window = NSWindow(contentRect: NSMakeRect(0, 0, 1024, 768),
+            styleMask: [.closable, .titled, .resizable, .miniaturizable],
+            backing: .buffered,
+            defer: true)
+
+let windowDelegate = WindowDelegate()
+window.delegate = windowDelegate
+window.title = &quot;Hey, Window under control!&quot;
+window.acceptsMouseMovedEvents = true
+window.center()
+window.orderFrontRegardless()
+
+while(running) {
+    var ev: NSEvent?
+    ev = app.nextEvent(matching: .any, until: nil, inMode: .default, dequeue: true)
+    if (ev != nil) {
+        NSLog(&quot;%@&quot;, ev!)
+        app.sendEvent(ev!)
+    }
+}
+
+app.terminate(nil)
+</code></pre>
+
+<p>Good! What do we have here? First, we have two classes <code>AppDelegate</code> and <code>WindowDelegate</code> - they help us to capture events from window and application in the same way as we normally do for this objects in Mac OS. Then we create application, window and wire with delegates. Then event loop starts until global variable <code>running</code> is set to true basically we capture <code>nextEvent</code> without any filtering and if there is event we send it to default handler for the application. As far as I understand events will be handled by application, application delegate, window and window delegate (probably order is wrong, need to find some clarification of how events are propagated). Solution can be simplified, we can remove all delegates and not use them but then handling of <code>windowDidResize</code> for example will be non-trivial.</p>
+
+<p>That&rsquo;s it for today.</p>
+
+</main>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      <a href="https://github.com/nexo.dev">Github</a>
+      
+    </footer>
+  </body>
+</html>
+
