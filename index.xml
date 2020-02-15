@@ -17,7 +17,7 @@
       <pubDate>Sat, 27 Apr 2019 00:00:00 +0000</pubDate>
       
       <guid>/post/2019/04/27/how-to-open-window-in-macos-programmatically-using-swift/</guid>
-      <description>Once I face a problem - &amp;ldquo;How can I create a normal window on Mac OS?&amp;rdquo;. Definitely it is possible to use XCode, generate new project using very modern tools and start writing events handling functions/callbacks/delegates/etc. But what if I want to do everything using code, for example last available version of Swift. And here I faced a problem cause there are no normal step-by-step guides which will explain how to do it.</description>
+      <description>Once I faced a problem - &amp;ldquo;How can I create a normal window on Mac OS?&amp;quot;. Definitely it is possible to use XCode, generate new project using very modern tools and start writing events handling functions/callbacks/delegates/etc. But what if I want to do everything by hand, for example last by wrinting some code using latest available version of Swift. And here I faced a problem - there are no simple step-by-step guide which will explain how to do it.</description>
     </item>
     
     <item>
