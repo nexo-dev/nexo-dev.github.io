@@ -1,34 +1,30 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Mikhail Kochegarov&#39;s personal blog">
     <title>How to open window in MacOS programmatically using Swift | </title>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/fonts.css" />
     <link rel="stylesheet" href="/css/theme-override.css">
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.css" integrity="sha384-D+9gmBxUQogRLqvARvNLmA9hS2x//eK1FhVb9PiU86gmcrBrJAQT8okdJ4LMp2uv" crossorigin="anonymous">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.js" integrity="sha384-483A6DwYfKeDa0Q52fJmxFXkcPCFfnXMoXblOkJ4JcA8zATN6Tm78UNL72AKk+0O" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/contrib/auto-render.min.js" integrity="sha384-yACMu8JWxKzSp/C1YV86pzGiQ/l1YUfE8oPuahJQxzehAjEt2GiQuy/BIvl9KyeF" crossorigin="anonymous"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body);
-        });
-    </script>
+    <header>
 
-<header>
-
-  
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
   <nav>
     <ul>
       
       
       <li class="pull-left ">
-        <a href="/">/home/</a>
+        <a href="/">~/</a>
       </li>
       
       
@@ -76,9 +72,9 @@
 </div>
 
 
-
-<main>
-<p>Once I faced a problem - &ldquo;How can I create a normal window on Mac OS?&quot;. Definitely it is possible to use XCode, generate new project using very modern tools and start writing events handling functions/callbacks/delegates/etc. But what if I want to do everything by hand, for example last by wrinting some code using latest available version of Swift. And here I faced a problem - there are no simple step-by-step guide which will explain how to do it. There are some information on Stack Overflow or on other sites but nothing really complete.</p>
+<div class="content-wrapper">
+  <main>
+    <p>Once I faced a problem - &ldquo;How can I create a normal window on Mac OS?&quot;. Definitely it is possible to use XCode, generate new project using very modern tools and start writing events handling functions/callbacks/delegates/etc. But what if I want to do everything by hand, for example last by writing some code using latest available version of Swift. And here I faced a problem - there are no simple step-by-step guide which will explain how to do it. There are some information on Stack Overflow or on other sites but nothing really complete.</p>
 <p>So, having a lot of knowledge from past how to do the same on Windows using WinAPI, I started to dig into <a href="https://developer.apple.com/documentation/">documentation</a> and write some code.</p>
 <p>Here is first version:</p>
 <pre><code>import AppKit
@@ -174,11 +170,12 @@ while(running) {
 
 app.terminate(nil)
 </code></pre>
-<p>Good! What do we have here? First, we have two classes <code>AppDelegate</code> and <code>WindowDelegate</code> - they help us to capture events from window and application in the same way as we normally do for this objects in Mac OS. Then we create application, window and wire with delegates. After that event loop starts until global variable <code>running</code> is set, basically we capture <code>nextEvent</code> without any filtering and whennew event occur we send it to default handler for the application. As far as I understand events will be handled by application, application delegate, window and window delegate (probably order is wrong, need to find some clarification of how events are propagated). Solution can be simplified, we can remove all delegates and not use them but then handling of <code>windowDidResize</code> will become not so trivial.</p>
+<p>Good! What do we have here? First, we have two classes <code>AppDelegate</code> and <code>WindowDelegate</code> - they help us to capture events from window and application in the same way as we normally do for this objects in Mac OS. Then we create application, window and wire with delegates. After that event loop starts until global variable <code>running</code> is set, basically we capture <code>nextEvent</code> without any filtering and when new event occur we send it to default handler for the application. As far as I understand events will be handled by application, application delegate, window and window delegate (probably order is wrong, need to find some clarification of how events are propagated). Solution can be simplified, we can remove all delegates and not use them but then handling of <code>windowDidResize</code> will become not so trivial.</p>
 <p>That&rsquo;s it for today.</p>
 
-</main>
-
+    <a href="/"> >> Home</a>
+  </main>
+</div>
     <footer>
       
 <script>

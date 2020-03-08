@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Mikhail Kochegarov&#39;s personal blog">
+    <title>Swift VS Objective-C | </title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/theme-override.css">
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">~/</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">~/categories</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Swift VS Objective-C</span></h1>
+
+<h2 class="date">2020/03/08</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/blog">Blog</a> 
+  
+  
+  
+  Tags: <a href="/tags/swift">swift</a> <a href="/tags/objective-c">objective-c</a> 
+  
+  
+</p>
+</div>
+
+
+<div class="content-wrapper">
+  <main>
+    <p>What is the difference between Swift and Objective-C code after compilation? It will be very unfair comparison with simplest &ldquo;Hello World&rdquo; app.</p>
+<h1 id="swift">Swift</h1>
+<p>Source code:</p>
+<pre><code>import AppKit
+
+NSLog(&quot;Hello world&quot;)
+</code></pre>
+<p>Compiler:</p>
+<pre><code>$ swiftc --version
+Apple Swift version 5.1.3 (swiftlang-1100.0.282.1 clang-1100.0.33.15)
+</code></pre>
+<p>Build:</p>
+<pre><code>$ swiftc main.swift -o swift.out
+</code></pre>
+<p>Compiled version of main function:</p>
+<pre><code>push    rbp
+mov     rbp, rsp
+sub     rsp, 30h
+xor     eax, eax
+mov     ecx, eax
+mov     [rbp+var_4], edi
+mov     rdi, rcx
+mov     [rbp+var_10], rsi
+call    Swift.CVarArg
+xor     r8d, r8d
+mov     edi, r8d
+mov     rsi, rax
+mov     [rbp+var_18], rdx
+call    Swift._allocateUninitializedArray     # 1 - allocate some space for string data
+lea     rdi, aHelloWorld
+mov     esi, 0Bh
+mov     r8d, 1
+mov     [rbp+var_20], rdx
+mov     edx, r8d
+mov     [rbp+var_28], rax
+call    Swift.String.init                     # 2 - create String object
+mov     rdi, rax
+mov     rsi, rdx
+mov     rax, [rbp+var_28]
+mov     [rbp+var_30], rdx
+mov     rdx, rax
+call    Foundation.NSLog                      # 3 - call NSLog
+mov     rdi, [rbp+var_30]
+call    swift_bridgeObjectRelease             # 4.1 - release object
+mov     rdi, [rbp+var_28]
+call    swift_bridgeObjectRelease             # 4.2 - release object
+xor     eax, eax
+add     rsp, 30h
+pop     rbp
+retn
+</code></pre>
+<p>Dynamically linked libraries:</p>
+<pre><code>$ otool -L swift.out
+swift.out:
+    /usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 228.0.0)
+    /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1281.0.0)
+    /usr/lib/swift/libswiftCore.dylib (compatibility version 1.0.0, current version 1100.8.255)
+    /usr/lib/swift/libswiftFoundation.dylib (compatibility version 1.0.0, current version 0.0.0)
+</code></pre>
+<h1 id="objective-c">Objective-C</h1>
+<p>Source code:</p>
+<pre><code>#import &lt;AppKit/AppKit.h&gt;
+
+int main(int argc, const char *argv[]) {
+    NSLog(@&quot;Hello world&quot;);
+    return (0);
+}
+</code></pre>
+<p>Compiler:</p>
+<pre><code>$ clang --version
+Apple clang version 11.0.0 (clang-1100.0.33.17)
+</code></pre>
+<p>Build:</p>
+<pre><code>$ clang -framework Foundation main.mm -o objc.out
+</code></pre>
+<p>Compiled version of main function:</p>
+<pre><code>push    rbp
+mov     rbp, rsp
+sub     rsp, 10h
+lea     rax, cfstr_HelloWorld
+mov     [rbp+var_4], 0
+mov     [rbp+var_8], edi
+mov     [rbp+var_10], rsi
+mov     rdi, rax
+mov     al, 0
+call    _NSLog                                # 1 - call NSLog
+xor     eax, eax
+add     rsp, 10h
+pop     rbp
+retn
+</code></pre>
+<p>Objective-C have no automatic objects release mechanism, let&rsquo;s fix that. New version for Objective-C code:</p>
+<pre><code>#import &lt;AppKit/AppKit.h&gt;
+
+int main(int argc, const char *argv[]) {
+    @autoreleasepool {
+        NSLog(@&quot;Hello world&quot;);
+    }
+    return (0);
+}
+</code></pre>
+<p>New version of main function:</p>
+<pre><code>push    rbp
+mov     rbp, rsp
+sub     rsp, 20h
+mov     [rbp+var_4], 0
+mov     [rbp+var_8], edi
+mov     [rbp+var_10], rsi
+call    _objc_autoreleasePoolPush              # 1 - initialize autorelease pool
+lea     rsi, cfstr_HelloWorld
+mov     rdi, rsi
+mov     [rbp+var_18], rax
+mov     al, 0
+call    _NSLog                                 # 2 - call NSLog
+mov     rdi, [rbp+var_18]
+call    _objc_autoreleasePoolPop               # 3 - release objects from pool
+xor     eax, eax
+add     rsp, 20h
+pop     rbp
+retn
+</code></pre>
+<p>Dynamically linked libraries:</p>
+<pre><code>$ otool -L objc.out
+objc.out:
+    /System/Library/Frameworks/Foundation.framework/Versions/C/Foundation (compatibility version 300.0.0, current version 1673.126.0)
+    /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1281.0.0)
+    /System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 1673.126.0)
+    /usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 228.0.0)
+</code></pre>
+<h1 id="results">Results</h1>
+<ul>
+<li>Build result for simplest hello world app is quite similar in both Objective-C and Swift</li>
+<li>Both languages use it&rsquo;s own version of standard libraries which are very similar (in fact)</li>
+<li>Swift do a little bit more for the user and add some memory cleanup/etc.</li>
+<li>Objective-C on other hand has little bit more control on what is going on and do not add extra &ldquo;magic&rdquo; in code</li>
+</ul>
+<h1 id="opened-question">Opened question</h1>
+<ul>
+<li>What is the real difference between standard libraries, eg. is NSLog is equal not from logical but from implementation perspective</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      <a href="https://github.com/nexo.dev">Github</a>
+      
+    </footer>
+  </body>
+</html>
+
