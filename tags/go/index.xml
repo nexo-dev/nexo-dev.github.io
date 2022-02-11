@@ -13,10 +13,10 @@
       <pubDate>Fri, 11 Feb 2022 00:00:00 +0000</pubDate>
       
       <guid>/articles/2022-02-11-go-slices/</guid>
-      <description>Problem: You have two slices that potentially share same memory buffer meaning that appending to one can cause changes in another one. So how to understand if two slices are actually share memory?
+      <description>Problem: You have two slices that potentially share the same memory buffer meaning that appending to one can cause changes in another one. So, how to understand if two slices share memory?
 Let&amp;rsquo;s imagine we have a functions like:
 func IsMemoryShared(a, b []int) bool { ... }  And we want to preserve following behaviour:
-a := []{1, 2, 3} b := []{1, 2, 3} IsMemoryShared(a, a) // true IsMemoryShared(a[:2]) // true IsMemoryShared(a, b) // false IsMemoryShared(a[1:0], b[1:0]) // false  It is known that slice in Go backed by a struct that contain a pointer to some place in memory where slice data is stored and two integers - length and capacity of the slice.</description>
+a := []{1, 2, 3} b := []{1, 2, 3} IsMemoryShared(a, a) // true IsMemoryShared(a[:2]) // true IsMemoryShared(a, b) // false IsMemoryShared(a[1:0], b[1:0]) // false  It is known that slice in Go backed by a struct and contain a pointer to a place in memory where slice data is stored and two integers - length and capacity of the slice.</description>
     </item>
     
   </channel>
