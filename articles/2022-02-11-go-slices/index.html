@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta charset="utf-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="icon" href="/favicon.ico">
+
+  <title>
+    How to compare Go slices? - 
+  </title>
+
+  <meta name="description" content="Problem: You have two slices that potentially share same memory buffer meaning that appending to one can cause changes in another one. So how to understand if two slices are actually share memory?
+Let&rsquo;s imagine we have a functions like:
+func IsMemoryShared(a, b []int) bool { ... }  And we want to preserve following behaviour:
+a := []{1, 2, 3} b := []{1, 2, 3} IsMemoryShared(a, a) // true IsMemoryShared(a[:2]) // true IsMemoryShared(a, b) // false IsMemoryShared(a[1:0], b[1:0]) // false  It is known that slice in Go backed by a struct that contain a pointer to some place in memory where slice data is stored and two integers - length and capacity of the slice." /><meta name="generator" content="Hugo 0.92.1" />
+
+  <link rel="stylesheet" href="/css/main.css" />
+
+  
+  
+
+  <meta property="og:title" content="How to compare Go slices?" />
+<meta property="og:description" content="Problem: You have two slices that potentially share same memory buffer meaning that appending to one can cause changes in another one. So how to understand if two slices are actually share memory?
+Let&rsquo;s imagine we have a functions like:
+func IsMemoryShared(a, b []int) bool { ... }  And we want to preserve following behaviour:
+a := []{1, 2, 3} b := []{1, 2, 3} IsMemoryShared(a, a) // true IsMemoryShared(a[:2]) // true IsMemoryShared(a, b) // false IsMemoryShared(a[1:0], b[1:0]) // false  It is known that slice in Go backed by a struct that contain a pointer to some place in memory where slice data is stored and two integers - length and capacity of the slice." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/2022-02-11-go-slices/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2022-02-11T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-02-11T00:00:00+00:00" />
+
+
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="How to compare Go slices?"/>
+<meta name="twitter:description" content="Problem: You have two slices that potentially share same memory buffer meaning that appending to one can cause changes in another one. So how to understand if two slices are actually share memory?
+Let&rsquo;s imagine we have a functions like:
+func IsMemoryShared(a, b []int) bool { ... }  And we want to preserve following behaviour:
+a := []{1, 2, 3} b := []{1, 2, 3} IsMemoryShared(a, a) // true IsMemoryShared(a[:2]) // true IsMemoryShared(a, b) // false IsMemoryShared(a[1:0], b[1:0]) // false  It is known that slice in Go backed by a struct that contain a pointer to some place in memory where slice data is stored and two integers - length and capacity of the slice."/>
+
+
+  <meta itemprop="name" content="How to compare Go slices?">
+<meta itemprop="description" content="Problem: You have two slices that potentially share same memory buffer meaning that appending to one can cause changes in another one. So how to understand if two slices are actually share memory?
+Let&rsquo;s imagine we have a functions like:
+func IsMemoryShared(a, b []int) bool { ... }  And we want to preserve following behaviour:
+a := []{1, 2, 3} b := []{1, 2, 3} IsMemoryShared(a, a) // true IsMemoryShared(a[:2]) // true IsMemoryShared(a, b) // false IsMemoryShared(a[1:0], b[1:0]) // false  It is known that slice in Go backed by a struct that contain a pointer to some place in memory where slice data is stored and two integers - length and capacity of the slice."><meta itemprop="datePublished" content="2022-02-11T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-02-11T00:00:00+00:00" />
+<meta itemprop="wordCount" content="544">
+<meta itemprop="keywords" content="go," />
+
+  <meta itemprop="name" content="How to compare Go slices?">
+<meta itemprop="description" content="Problem: You have two slices that potentially share same memory buffer meaning that appending to one can cause changes in another one. So how to understand if two slices are actually share memory?
+Let&rsquo;s imagine we have a functions like:
+func IsMemoryShared(a, b []int) bool { ... }  And we want to preserve following behaviour:
+a := []{1, 2, 3} b := []{1, 2, 3} IsMemoryShared(a, a) // true IsMemoryShared(a[:2]) // true IsMemoryShared(a, b) // false IsMemoryShared(a[1:0], b[1:0]) // false  It is known that slice in Go backed by a struct that contain a pointer to some place in memory where slice data is stored and two integers - length and capacity of the slice."><meta itemprop="datePublished" content="2022-02-11T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-02-11T00:00:00+00:00" />
+<meta itemprop="wordCount" content="544">
+<meta itemprop="keywords" content="go," />
+</head><body class="flex relative h-full min-h-screen"><aside
+  class="will-change-transform transform transition-transform -translate-x-full absolute top-0 left-0 md:relative md:translate-x-0 w-3/4 md:w-60 h-full min-h-screen p-3 bg-slate-50 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col gap-2.5 z-20 sidebar">
+  <p class="font-bold mb-5 flex items-center gap-2">
+    <button
+      aria-label="Close sidebar"
+      class="md:hidden menu-trigger-close p-1 rounded text-slate-800 dark:text-slate-50 hover:bg-slate-200 dark:hover:bg-slate-700"><svg class="h-6 w-6" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+  fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" />
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+</svg></button>
+    <a href="/" class="px-2">
+      <span></span>
+    </a>
+    <button
+      aria-label="Toggle dark mode"
+      class="dark-mode-toggle p-2 rounded border dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700"><svg class="h-4 w-4" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+  fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" />
+  <circle cx="12" cy="12" r="4" />
+  <path d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7" />
+</svg></button>
+  </p>
+
+  
+  <ul class="list-none flex flex-col gap-1">
+    
+    <li>
+      <a class="px-2 py-1.5 rounded-md text-sm flex items-center justify-between  hover:bg-slate-200 dark:hover:bg-slate-700 "
+        href="/" >
+        <span>Home</span>
+        
+      </a>
+    </li>
+    
+    <li>
+      <a class="px-2 py-1.5 rounded-md text-sm flex items-center justify-between  hover:bg-slate-200 dark:hover:bg-slate-700 "
+        href="/articles" >
+        <span>Articles</span>
+        
+      </a>
+    </li>
+    
+  </ul>
+
+  <div class="flex-1"></div>
+
+  
+
+  <ul class="list-none flex flex-wrap justify-center gap-1 pt-2 border-t border-slate-200 dark:border-slate-600">
+    
+    <li>
+      <a class="px-2 py-1.5 rounded-md text-sm block text-slate-800 dark:text-slate-50  hover:bg-slate-200 dark:hover:bg-slate-700 "
+        href="https://www.linkedin.com/in/mikhail-kochegarov/" target="_blank" rel="noopener noreferrer">
+        <span class="sr-only">LinkedIn</span>
+        
+        <span><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+  stroke-linecap="round" stroke-linejoin="round">
+  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+  <rect x="2" y="9" width="4" height="12" />
+  <circle cx="4" cy="4" r="2" />
+</svg></span>
+        
+      </a>
+    </li>
+    
+    <li>
+      <a class="px-2 py-1.5 rounded-md text-sm block text-slate-800 dark:text-slate-50  hover:bg-slate-200 dark:hover:bg-slate-700 "
+        href="https://github.com/NexoMichael" target="_blank" rel="noopener noreferrer">
+        <span class="sr-only">GitHub</span>
+        
+        <span><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+  stroke-linecap="round" stroke-linejoin="round">
+  <path
+    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+</svg></span>
+        
+      </a>
+    </li>
+    
+  </ul>
+</aside>
+
+<div
+  class="fixed bg-slate-700 bg-opacity-5 transition duration-200 ease-in-out inset-0 z-10 pointer-events-auto md:hidden left-0 top-0 w-full h-full hidden menu-overlay">
+</div>
+
+<button
+  aria-label="Toggle Sidebar"
+  class="md:hidden absolute top-3 left-3 z-10 menu-trigger p-1 rounded text-slate-800 dark:text-slate-50 hover:bg-slate-100"><svg class="h-6 w-6" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+  fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" />
+  <line x1="4" y1="6" x2="20" y2="6" />
+  <line x1="4" y1="12" x2="20" y2="12" />
+  <line x1="4" y1="18" x2="16" y2="18" />
+</svg></button><div class="flex-1">
+
+
+
+<div class="flex h-screen relative">
+
+  <section
+    class="will-change-transform transform transition-transform -translate-x-[200%] absolute top-0 left-0 lg:relative
+  lg:translate-x-0 lg:min-w-[400px] lg:w-1/4 h-full bg-slate-50 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 lg:flex flex-col py-3 overflow-y-auto scroll-area">
+    
+    
+    <a href="/articles/">
+      <h2 class="font-bold mb-5 py-1 pl-12 pr-3 md:px-3">Articles</h2>
+    </a>
+    <div class="space-y-2.5">
+      
+      <a class="block px-3 py-4  bg-slate-900 dark:bg-slate-700 text-slate-50 "
+        href="/articles/2022-02-11-go-slices/">
+        
+        
+        <h3 class="text-lg font-semibold mb-0.5">How to compare Go slices?</h3>
+        <div
+          class="text-sm  text-slate-400  line-clamp-2">
+          Problem: You have two slices that potentially share same memory buffer meaning that appending to one can cause changes in another one. So how to understand if two slices are actually share memory?
+Let&rsquo;s imagine we have a functions like:
+func IsMemoryShared(a, b []int) bool { ... }  And we want to preserve following behaviour:
+a := []{1, 2, 3} b := []{1, 2, 3} IsMemoryShared(a, a) // true IsMemoryShared(a[:2]) // true IsMemoryShared(a, b) // false IsMemoryShared(a[1:0], b[1:0]) // false  It is known that slice in Go backed by a struct that contain a pointer to some place in memory where slice data is stored and two integers - length and capacity of the slice.
+        </div>
+      </a>
+      
+      <a class="block px-3 py-4  hover:bg-slate-200 dark:hover:bg-slate-700 "
+        href="/articles/2019-04-27-swift/">
+        
+        
+        <h3 class="text-lg font-semibold mb-0.5">How to open window in MacOS programmatically using Swift</h3>
+        <div
+          class="text-sm  text-slate-500 dark:text-slate-400  line-clamp-2">
+          Once I face a problem - &ldquo;How can I create a normal window on Mac OS?&rdquo;. Definitely it is possible to use XCode, generate new project using very modern tools and start writing events handling functions/callbacks/delegates/etc. But what if I want to do everything using code, for example last available version of Swift. And here I faced a problem cause there are no normal step-by-step guides which will explain how to do it.
+        </div>
+      </a>
+      
+      <a class="block px-3 py-4  hover:bg-slate-200 dark:hover:bg-slate-700 "
+        href="/articles/2019-03-10-initial-commit/">
+        
+        
+        <h3 class="text-lg font-semibold mb-0.5">Initial Commit</h3>
+        <div
+          class="text-sm  text-slate-500 dark:text-slate-400  line-clamp-2">
+          So, I want to Welcome everybody who at any circumstances get to this page.
+Recently I decided that it will be great at least to save some random things that I found interesting but also try to share it cause I strongly believe that if something become interesting to one person then this person is not alone and there is non zero probability that there is somebody else who can be interested in it.
+        </div>
+      </a>
+      </div>
+    </section>
+
+  <div class="overflow-y-auto h-screen w-full">
+    <article class="px-6 py-20 w-full mx-auto prose lg:prose-lg h-fit dark:prose-invert prose-img:mx-auto">
+
+      
+      <h1 class="!mb-2">How to compare Go slices?</h1>
+      
+      <p class="text-sm text-slate-500 !mb-8">February 11, 2022</p>
+      
+
+      
+
+      <p>Problem:
+You have two slices that potentially share same memory buffer meaning that appending to one can cause changes in another one. So how to understand if two slices are actually share memory?</p>
+<p>Let&rsquo;s imagine we have a functions like:</p>
+<pre><code>func IsMemoryShared(a, b []int) bool {
+    ...
+}
+</code></pre>
+<p>And we want to preserve following behaviour:</p>
+<pre><code>a := []{1, 2, 3}
+b := []{1, 2, 3}
+
+IsMemoryShared(a, a)  // true
+IsMemoryShared(a[:2]) // true
+IsMemoryShared(a, b)  // false
+IsMemoryShared(a[1:0], b[1:0])  // false
+</code></pre>
+<p>It is known that slice in <a href="https://github.com/golang/go/blob/master/src/runtime/slice.go#L15"  target="_blank" rel="noopener" >Go backed by a struct</a> that contain a pointer to some place in memory where slice data is stored and two integers - length and capacity of the slice.</p>
+<p>Technically you can access <code>array</code> pointer by dereferencing slice value (may not work in future releases if <code>slice</code> struct will be changed, for example order of properties will be changed or compiler will decide to reorder struct fields). <a href="https://play.golang.com/p/mM1j06teCa7"  target="_blank" rel="noopener" >Playground</a></p>
+<pre><code>a := []int{1, 2, 3}
+fmt.Println((unsafe.Pointer)(&amp;a))  // 0xc00000c030
+</code></pre>
+<p>But just accessing <code>array</code> address doesn&rsquo;t solve the problem cause for &ldquo;sliced&rdquo; slice you will get different address, check <a href="https://play.golang.com/p/YCNzE4qa02P"  target="_blank" rel="noopener" >here</a>:</p>
+<pre><code>a := []int{1, 2, 3}
+b := a[1:]
+fmt.Println((unsafe.Pointer)(&amp;a))  // 0xc00010a000
+fmt.Println((unsafe.Pointer)(&amp;b))  // 0xc00010a018
+</code></pre>
+<p>There is a nice trick which become possible cause slices in Go are stored as pure arrays in memory which can&rsquo;t be &ldquo;resized&rdquo; but actually <a href="https://github.com/golang/go/blob/master/src/runtime/slice.go#L285"  target="_blank" rel="noopener" >got copied</a> when slice need to grow. So we can technically check address of the last element in the slice and compare it, <a href="https://play.golang.com/p/rEHQBVzUFVD"  target="_blank" rel="noopener" >let&amp;rsquo;s try it out</a>:</p>
+<pre><code>a := []int{1, 2, 3}
+b := a[1:]
+fmt.Println((unsafe.Pointer)(&amp;a[len(a)-1])) // 0xc0000be010
+fmt.Println((unsafe.Pointer)(&amp;b[len(b)-1])) // 0xc0000be010
+</code></pre>
+<p>But that is not all, in case if slice is cutted from the end <a href="https://play.golang.com/p/YL4l6OYw3XK"  target="_blank" rel="noopener" >it will not work</a>:</p>
+<pre><code>a := []int{1, 2, 3}
+b := a[:1]
+fmt.Println((unsafe.Pointer)(&amp;a[len(a)-1])) // 0xc000016028
+fmt.Println((unsafe.Pointer)(&amp;b[len(b)-1])) // 0xc000016018
+</code></pre>
+<p>Solution is to take address of the last element in the backed array and we know that this array size is defined by a slice capacity, see <a href="https://play.golang.com/p/DP-69wkORAC"  target="_blank" rel="noopener" >here</a>:</p>
+<pre><code>a := []int{1, 2, 3}
+b := a[1:2]
+
+addr := func(v []int) unsafe.Pointer {
+  v2 := v[:cap(v)]
+  return (unsafe.Pointer)(&amp;v2[len(v2)-1])
+}
+
+fmt.Println(a, addr(a)) // [1 2 3] 0xc000126008
+fmt.Println(b, addr(b)) // [2] 0xc000126008
+</code></pre>
+<p>So basically algorithm is the following:</p>
+<ol>
+<li>resize your slice to make <code>len(a) == cap(a)</code> (that actually changes only <code>len</code> parameter and not result in allocating of new memory)</li>
+<li>get latest element of the resulting slice</li>
+<li>compare address of the found element</li>
+</ol>
+<p>Even if solution looks solid, unfortunatelly, it is not. In <code>Go</code> there is way to change slice capacity down without reallocation:</p>
+<pre><code>a := []int{1, 2, 3}
+b := a[1:2:2] // &lt;- slice operator can have 3 values
+
+addr := func(v []int) unsafe.Pointer {
+      v2 := v[:cap(v)]
+
+  return (unsafe.Pointer)(&amp;v2[len(v2)-1])
+}
+
+fmt.Println(a, addr(a)) // [1 2 3] 0xc0000b8010
+fmt.Println(b, addr(b)) // [2] 0xc0000b8008
+</code></pre>
+<p>Slice operator actually has two forms, one is common - <code>[start:len]</code> and second one is quite rare - <code>[start:len:cap]</code>. You can&rsquo;t set capacity greater then actual size of the backing memory array but you can definitelly change it down. And for such cases there are no easy way to compare slices, one thing that you can do is to check if slices overlap by cheking if two arrays overlap but it will also not guarantee correct result cause two slices can actually share same memory but not overlap.</p>
+
+    </article>
+  </div>
+
+</div>
+
+
+  </div>
+<script type="text/javascript" src="/main.js" defer></script>
+
+
+</body>
+
+</html>

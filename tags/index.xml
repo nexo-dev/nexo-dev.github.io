@@ -6,24 +6,20 @@
     <description>Recent content in Tags on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 08 Mar 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Fri, 11 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>objective-c</title>
-      <link>/tags/objective-c/</link>
-      <pubDate>Sun, 08 Mar 2020 00:00:00 +0000</pubDate>
+      <title>go</title>
+      <link>/tags/go/</link>
+      <pubDate>Fri, 11 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>/tags/objective-c/</guid>
+      <guid>/tags/go/</guid>
       <description></description>
     </item>
     
     <item>
       <title>swift</title>
       <link>/tags/swift/</link>
-      <pubDate>Sun, 08 Mar 2020 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 27 Apr 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/swift/</guid>
       <description></description>

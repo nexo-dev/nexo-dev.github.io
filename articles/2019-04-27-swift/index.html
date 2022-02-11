@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta charset="utf-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="icon" href="/favicon.ico">
+
+  <title>
+    How to open window in MacOS programmatically using Swift - 
+  </title>
+
+  <meta name="description" content="Once I face a problem - &ldquo;How can I create a normal window on Mac OS?&rdquo;. Definitely it is possible to use XCode, generate new project using very modern tools and start writing events handling functions/callbacks/delegates/etc. But what if I want to do everything using code, for example last available version of Swift. And here I faced a problem cause there are no normal step-by-step guides which will explain how to do it." /><meta name="generator" content="Hugo 0.92.1" />
+
+  <link rel="stylesheet" href="/css/main.css" />
+
+  
+  
+
+  <meta property="og:title" content="How to open window in MacOS programmatically using Swift" />
+<meta property="og:description" content="Once I face a problem - &ldquo;How can I create a normal window on Mac OS?&rdquo;. Definitely it is possible to use XCode, generate new project using very modern tools and start writing events handling functions/callbacks/delegates/etc. But what if I want to do everything using code, for example last available version of Swift. And here I faced a problem cause there are no normal step-by-step guides which will explain how to do it." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/2019-04-27-swift/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2019-04-27T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-04-27T00:00:00+00:00" />
+
+
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="How to open window in MacOS programmatically using Swift"/>
+<meta name="twitter:description" content="Once I face a problem - &ldquo;How can I create a normal window on Mac OS?&rdquo;. Definitely it is possible to use XCode, generate new project using very modern tools and start writing events handling functions/callbacks/delegates/etc. But what if I want to do everything using code, for example last available version of Swift. And here I faced a problem cause there are no normal step-by-step guides which will explain how to do it."/>
+
+
+  <meta itemprop="name" content="How to open window in MacOS programmatically using Swift">
+<meta itemprop="description" content="Once I face a problem - &ldquo;How can I create a normal window on Mac OS?&rdquo;. Definitely it is possible to use XCode, generate new project using very modern tools and start writing events handling functions/callbacks/delegates/etc. But what if I want to do everything using code, for example last available version of Swift. And here I faced a problem cause there are no normal step-by-step guides which will explain how to do it."><meta itemprop="datePublished" content="2019-04-27T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-04-27T00:00:00+00:00" />
+<meta itemprop="wordCount" content="625">
+<meta itemprop="keywords" content="swift," />
+
+  <meta itemprop="name" content="How to open window in MacOS programmatically using Swift">
+<meta itemprop="description" content="Once I face a problem - &ldquo;How can I create a normal window on Mac OS?&rdquo;. Definitely it is possible to use XCode, generate new project using very modern tools and start writing events handling functions/callbacks/delegates/etc. But what if I want to do everything using code, for example last available version of Swift. And here I faced a problem cause there are no normal step-by-step guides which will explain how to do it."><meta itemprop="datePublished" content="2019-04-27T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-04-27T00:00:00+00:00" />
+<meta itemprop="wordCount" content="625">
+<meta itemprop="keywords" content="swift," />
+</head><body class="flex relative h-full min-h-screen"><aside
+  class="will-change-transform transform transition-transform -translate-x-full absolute top-0 left-0 md:relative md:translate-x-0 w-3/4 md:w-60 h-full min-h-screen p-3 bg-slate-50 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col gap-2.5 z-20 sidebar">
+  <p class="font-bold mb-5 flex items-center gap-2">
+    <button
+      aria-label="Close sidebar"
+      class="md:hidden menu-trigger-close p-1 rounded text-slate-800 dark:text-slate-50 hover:bg-slate-200 dark:hover:bg-slate-700"><svg class="h-6 w-6" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+  fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" />
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+</svg></button>
+    <a href="/" class="px-2">
+      <span></span>
+    </a>
+    <button
+      aria-label="Toggle dark mode"
+      class="dark-mode-toggle p-2 rounded border dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700"><svg class="h-4 w-4" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+  fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" />
+  <circle cx="12" cy="12" r="4" />
+  <path d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7" />
+</svg></button>
+  </p>
+
+  
+  <ul class="list-none flex flex-col gap-1">
+    
+    <li>
+      <a class="px-2 py-1.5 rounded-md text-sm flex items-center justify-between  hover:bg-slate-200 dark:hover:bg-slate-700 "
+        href="/" >
+        <span>Home</span>
+        
+      </a>
+    </li>
+    
+    <li>
+      <a class="px-2 py-1.5 rounded-md text-sm flex items-center justify-between  hover:bg-slate-200 dark:hover:bg-slate-700 "
+        href="/articles" >
+        <span>Articles</span>
+        
+      </a>
+    </li>
+    
+  </ul>
+
+  <div class="flex-1"></div>
+
+  
+
+  <ul class="list-none flex flex-wrap justify-center gap-1 pt-2 border-t border-slate-200 dark:border-slate-600">
+    
+    <li>
+      <a class="px-2 py-1.5 rounded-md text-sm block text-slate-800 dark:text-slate-50  hover:bg-slate-200 dark:hover:bg-slate-700 "
+        href="https://www.linkedin.com/in/mikhail-kochegarov/" target="_blank" rel="noopener noreferrer">
+        <span class="sr-only">LinkedIn</span>
+        
+        <span><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+  stroke-linecap="round" stroke-linejoin="round">
+  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+  <rect x="2" y="9" width="4" height="12" />
+  <circle cx="4" cy="4" r="2" />
+</svg></span>
+        
+      </a>
+    </li>
+    
+    <li>
+      <a class="px-2 py-1.5 rounded-md text-sm block text-slate-800 dark:text-slate-50  hover:bg-slate-200 dark:hover:bg-slate-700 "
+        href="https://github.com/NexoMichael" target="_blank" rel="noopener noreferrer">
+        <span class="sr-only">GitHub</span>
+        
+        <span><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+  stroke-linecap="round" stroke-linejoin="round">
+  <path
+    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+</svg></span>
+        
+      </a>
+    </li>
+    
+  </ul>
+</aside>
+
+<div
+  class="fixed bg-slate-700 bg-opacity-5 transition duration-200 ease-in-out inset-0 z-10 pointer-events-auto md:hidden left-0 top-0 w-full h-full hidden menu-overlay">
+</div>
+
+<button
+  aria-label="Toggle Sidebar"
+  class="md:hidden absolute top-3 left-3 z-10 menu-trigger p-1 rounded text-slate-800 dark:text-slate-50 hover:bg-slate-100"><svg class="h-6 w-6" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+  fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" />
+  <line x1="4" y1="6" x2="20" y2="6" />
+  <line x1="4" y1="12" x2="20" y2="12" />
+  <line x1="4" y1="18" x2="16" y2="18" />
+</svg></button><div class="flex-1">
+
+
+
+<div class="flex h-screen relative">
+
+  <section
+    class="will-change-transform transform transition-transform -translate-x-[200%] absolute top-0 left-0 lg:relative
+  lg:translate-x-0 lg:min-w-[400px] lg:w-1/4 h-full bg-slate-50 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 lg:flex flex-col py-3 overflow-y-auto scroll-area">
+    
+    
+    <a href="/articles/">
+      <h2 class="font-bold mb-5 py-1 pl-12 pr-3 md:px-3">Articles</h2>
+    </a>
+    <div class="space-y-2.5">
+      
+      <a class="block px-3 py-4  hover:bg-slate-200 dark:hover:bg-slate-700 "
+        href="/articles/2022-02-11-go-slices/">
+        
+        
+        <h3 class="text-lg font-semibold mb-0.5">How to compare Go slices?</h3>
+        <div
+          class="text-sm  text-slate-500 dark:text-slate-400  line-clamp-2">
+          Problem: You have two slices that potentially share same memory buffer meaning that appending to one can cause changes in another one. So how to understand if two slices are actually share memory?
+Let&rsquo;s imagine we have a functions like:
+func IsMemoryShared(a, b []int) bool { ... }  And we want to preserve following behaviour:
+a := []{1, 2, 3} b := []{1, 2, 3} IsMemoryShared(a, a) // true IsMemoryShared(a[:2]) // true IsMemoryShared(a, b) // false IsMemoryShared(a[1:0], b[1:0]) // false  It is known that slice in Go backed by a struct that contain a pointer to some place in memory where slice data is stored and two integers - length and capacity of the slice.
+        </div>
+      </a>
+      
+      <a class="block px-3 py-4  bg-slate-900 dark:bg-slate-700 text-slate-50 "
+        href="/articles/2019-04-27-swift/">
+        
+        
+        <h3 class="text-lg font-semibold mb-0.5">How to open window in MacOS programmatically using Swift</h3>
+        <div
+          class="text-sm  text-slate-400  line-clamp-2">
+          Once I face a problem - &ldquo;How can I create a normal window on Mac OS?&rdquo;. Definitely it is possible to use XCode, generate new project using very modern tools and start writing events handling functions/callbacks/delegates/etc. But what if I want to do everything using code, for example last available version of Swift. And here I faced a problem cause there are no normal step-by-step guides which will explain how to do it.
+        </div>
+      </a>
+      
+      <a class="block px-3 py-4  hover:bg-slate-200 dark:hover:bg-slate-700 "
+        href="/articles/2019-03-10-initial-commit/">
+        
+        
+        <h3 class="text-lg font-semibold mb-0.5">Initial Commit</h3>
+        <div
+          class="text-sm  text-slate-500 dark:text-slate-400  line-clamp-2">
+          So, I want to Welcome everybody who at any circumstances get to this page.
+Recently I decided that it will be great at least to save some random things that I found interesting but also try to share it cause I strongly believe that if something become interesting to one person then this person is not alone and there is non zero probability that there is somebody else who can be interested in it.
+        </div>
+      </a>
+      </div>
+    </section>
+
+  <div class="overflow-y-auto h-screen w-full">
+    <article class="px-6 py-20 w-full mx-auto prose lg:prose-lg h-fit dark:prose-invert prose-img:mx-auto">
+
+      
+      <h1 class="!mb-2">How to open window in MacOS programmatically using Swift</h1>
+      
+      <p class="text-sm text-slate-500 !mb-8">April 27, 2019</p>
+      
+
+      
+
+      <p>Once I face a problem - &ldquo;How can I create a normal window on Mac OS?&rdquo;. Definitely it is possible to use XCode, generate new project using very modern tools and start writing events handling functions/callbacks/delegates/etc. But what if I want to do everything using code, for example last available version of Swift. And here I faced a problem cause there are no normal step-by-step guides which will explain how to do it. There are some information on Stack Overflow or on other sites but nothing really complete.</p>
+<p>So, having a lot of knowledge from past how to do the same as I want on Windows using WinAPI, I started to dig into <a href="https://developer.apple.com/documentation/"  target="_blank" rel="noopener" >documentation</a> and based on own mistakes start writing some code.</p>
+<p>Here is first version of code:</p>
+<pre><code>import AppKit
+
+class AppDelegate: NSObject, NSApplicationDelegate {
+    var window: NSWindow!
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NSLog(&quot;Start app&quot;)
+
+        window = NSWindow(contentRect: NSMakeRect(0, 0, 1024, 768),
+            styleMask: [.closable, .titled],
+            backing: .buffered,
+            defer: false)
+
+        window.title = &quot;Hey, new Window!&quot;
+        window.center()
+        window.orderFrontRegardless()      
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        NSLog(&quot;Terminate app&quot;)
+    }
+
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -&gt; Bool {
+        return true
+    }
+}
+
+let app = NSApplication.shared
+let appDelegate = AppDelegate()
+app.delegate = appDelegate
+
+app.run()
+</code></pre>
+<p>Basically we define <code>AppDelegate</code> which implements several methods which define behavior that we need from application. <code>applicationDidFinishLaunching</code> is called when application finished launch and simplified it is our <code>WinMain</code>. <code>applicationWillTerminate</code> - added only to be able to log fact when application is got closed. <code>applicationShouldTerminateAfterLastWindowClosed</code> - additional configuration for application which result in automatic close of application (it means that event loop will be stopped) when last <code>Window</code> object is closed, in our cases we have only one window, so when it will be closed at the same time whole application will be terminated.</p>
+<p>This approach works and it seems like ideal solution for what we need, but the answer is - no. What is really needed is to be able to control event loop which is hidden here in <code>run</code> function of the application. Here we want to have full control for the events and be able to do something between events handling.</p>
+<p>So here comes second version -</p>
+<pre><code>import AppKit
+
+var running = true
+
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NSLog(&quot;start app&quot;)
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        NSLog(&quot;applicationWillTerminate&quot;)
+        running = false
+    }
+}
+
+class WindowDelegate: NSObject, NSWindowDelegate {
+    func windowDidResize(_ notification: Notification) {
+        NSLog(&quot;windowDidResize&quot;)
+    }
+
+    func windowWillClose(_ notification: Notification) {
+        NSLog(&quot;windowWillClose&quot;)
+        running = false
+    }
+}
+
+let app = NSApplication.shared
+let appDelegate = AppDelegate()
+app.delegate = appDelegate
+app.setActivationPolicy(.regular)
+app.finishLaunching()
+
+let window = NSWindow(contentRect: NSMakeRect(0, 0, 1024, 768),
+            styleMask: [.closable, .titled, .resizable, .miniaturizable],
+            backing: .buffered,
+            defer: true)
+
+let windowDelegate = WindowDelegate()
+window.delegate = windowDelegate
+window.title = &quot;Hey, Window under control!&quot;
+window.acceptsMouseMovedEvents = true
+window.center()
+window.orderFrontRegardless()
+
+while(running) {
+    var ev: NSEvent?
+    ev = app.nextEvent(matching: .any, until: nil, inMode: .default, dequeue: true)
+    if (ev != nil) {
+        NSLog(&quot;%@&quot;, ev!)
+        app.sendEvent(ev!)
+    }
+}
+
+app.terminate(nil)
+</code></pre>
+<p>Good! What do we have here? First, we have two classes <code>AppDelegate</code> and <code>WindowDelegate</code> - they help us to capture events from window and application in the same way as we normally do for this objects in Mac OS. Then we create application, window and wire with delegates. Then event loop starts until global variable <code>running</code> is set to true basically we capture <code>nextEvent</code> without any filtering and if there is event we send it to default handler for the application. As far as I understand events will be handled by application, application delegate, window and window delegate (probably order is wrong, need to find some clarification of how events are propagated). Solution can be simplified, we can remove all delegates and not use them but then handling of <code>windowDidResize</code> for example will be non-trivial.</p>
+<p>That&rsquo;s it for today.</p>
+
+    </article>
+  </div>
+
+</div>
+
+
+  </div>
+<script type="text/javascript" src="/main.js" defer></script>
+
+
+</body>
+
+</html>

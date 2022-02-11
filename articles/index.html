@@ -8,7 +8,7 @@
   <link rel="icon" href="/favicon.ico">
 
   <title>
-    thoughts - 
+    Articles - 
   </title>
 
   <meta name="description" content="Mikhail Kochegarov&#39;s personal blog" /><meta name="generator" content="Hugo 0.92.1" />
@@ -18,22 +18,22 @@
   
   
 
-  <meta property="og:title" content="thoughts" />
+  <meta property="og:title" content="Articles" />
 <meta property="og:description" content="Mikhail Kochegarov&#39;s personal blog" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="/tags/thoughts/" />
+<meta property="og:url" content="/articles/" />
 
 
 
   <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="thoughts"/>
+<meta name="twitter:title" content="Articles"/>
 <meta name="twitter:description" content="Mikhail Kochegarov&#39;s personal blog"/>
 
 
-  <meta itemprop="name" content="thoughts">
+  <meta itemprop="name" content="Articles">
 <meta itemprop="description" content="Mikhail Kochegarov&#39;s personal blog">
 
-  <meta itemprop="name" content="thoughts">
+  <meta itemprop="name" content="Articles">
 <meta itemprop="description" content="Mikhail Kochegarov&#39;s personal blog">
 </head><body class="flex relative h-full min-h-screen"><aside
   class="will-change-transform transform transition-transform -translate-x-full absolute top-0 left-0 md:relative md:translate-x-0 w-3/4 md:w-60 h-full min-h-screen p-3 bg-slate-50 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col gap-2.5 z-20 sidebar">
@@ -71,7 +71,7 @@
     </li>
     
     <li>
-      <a class="px-2 py-1.5 rounded-md text-sm flex items-center justify-between  hover:bg-slate-200 dark:hover:bg-slate-700 "
+      <a class="px-2 py-1.5 rounded-md text-sm flex items-center justify-between  bg-slate-800 text-white dark:bg-slate-50 dark:text-slate-800 dark:selection:bg-slate-400 "
         href="/articles" >
         <span>Articles</span>
         
@@ -131,6 +131,56 @@
   <line x1="4" y1="12" x2="20" y2="12" />
   <line x1="4" y1="18" x2="16" y2="18" />
 </svg></button><div class="flex-1">
+
+<div class="flex h-screen relative">
+
+  <section
+    class="w-full h-full md:min-w-[400px] md:w-1/4 bg-slate-50 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col py-3 overflow-y-auto scroll-area">
+    <a href="/articles/">
+      <h2 class="font-bold mb-5 py-1 pl-12 pr-3 md:px-3">Articles</h2>
+    </a>
+    <div class="space-y-2.5">
+      <a class="block px-3 py-4 hover:bg-slate-200 dark:hover:bg-slate-700" href="/articles/2022-02-11-go-slices/">
+
+        
+        
+        <h3 class="text-lg font-semibold mb-0.5">How to compare Go slices?</h3>
+        <div class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2">
+          Problem: You have two slices that potentially share same memory buffer meaning that appending to one can cause changes in another one. So how to understand if two slices are actually share memory?
+Let&rsquo;s imagine we have a functions like:
+func IsMemoryShared(a, b []int) bool { ... }  And we want to preserve following behaviour:
+a := []{1, 2, 3} b := []{1, 2, 3} IsMemoryShared(a, a) // true IsMemoryShared(a[:2]) // true IsMemoryShared(a, b) // false IsMemoryShared(a[1:0], b[1:0]) // false  It is known that slice in Go backed by a struct that contain a pointer to some place in memory where slice data is stored and two integers - length and capacity of the slice.
+        </div>
+      </a>
+      <a class="block px-3 py-4 hover:bg-slate-200 dark:hover:bg-slate-700" href="/articles/2019-04-27-swift/">
+
+        
+        
+        <h3 class="text-lg font-semibold mb-0.5">How to open window in MacOS programmatically using Swift</h3>
+        <div class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2">
+          Once I face a problem - &ldquo;How can I create a normal window on Mac OS?&rdquo;. Definitely it is possible to use XCode, generate new project using very modern tools and start writing events handling functions/callbacks/delegates/etc. But what if I want to do everything using code, for example last available version of Swift. And here I faced a problem cause there are no normal step-by-step guides which will explain how to do it.
+        </div>
+      </a>
+      <a class="block px-3 py-4 hover:bg-slate-200 dark:hover:bg-slate-700" href="/articles/2019-03-10-initial-commit/">
+
+        
+        
+        <h3 class="text-lg font-semibold mb-0.5">Initial Commit</h3>
+        <div class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2">
+          So, I want to Welcome everybody who at any circumstances get to this page.
+Recently I decided that it will be great at least to save some random things that I found interesting but also try to share it cause I strongly believe that if something become interesting to one person then this person is not alone and there is non zero probability that there is somebody else who can be interested in it.
+        </div>
+      </a>
+      </div>
+  </section>
+
+  <main class="hidden md:grid h-screen place-items-center flex-1">
+    <p class="text-center p-8 text-2xl text-slate-300 dark:text-slate-700">Select a post to read</p>
+  </main>
+
+</div>
+
+
   </div>
 <script type="text/javascript" src="/main.js" defer></script>
 
